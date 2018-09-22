@@ -1,15 +1,16 @@
 <?php
 
-namespace app\models;
+namespace shortener\models;
 
-use Yii;
+use lysenkobv\GeoIP\Result;
+use UAParser\Result\Client;
 use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%link_stat}}".
  *
- * @property int $id
- * @property int $link_id
+ * @property int    $id
+ * @property int    $link_id
  * @property string $datetime
  * @property string $ip
  * @property string $country
@@ -20,7 +21,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $browser
  * @property string $browser_version
  *
- * @property Link $link
+ * @property Link   $link
  */
 class LinkStat extends \yii\db\ActiveRecord
 {
@@ -39,12 +40,33 @@ class LinkStat extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class'                 => TimestampBehavior::class,
-                'value'                 => function () { return gmdate('Y-m-d H:i:s'); },
-                'createdAtAttribute'    => 'datetime',
-                'updatedAtAttribute'    => null,
-            ]
+                'class' => TimestampBehavior::class,
+                'value' => function () {
+                    return date('Y-m-d H:i:s');
+                },
+                'createdAtAttribute' => 'datetime',
+                'updatedAtAttribute' => null,
+            ],
         ];
+    }
+
+    public static function create($linkId, $ip, Result $geoData, Client $userAgentData)
+    {
+        $linkStats = new static();
+
+        $linkStats->link_id = $linkId;
+
+        $linkStats->ip = $ip;
+        $linkStats->country = $geoData->country;
+        $linkStats->city = $geoData->city;
+
+        $linkStats->user_agent = $userAgentData->originalUserAgent;
+        $linkStats->browser = $userAgentData->ua->family;
+        $linkStats->browser_version = $userAgentData->ua->toVersion();
+        $linkStats->os = $userAgentData->os->family;
+        $linkStats->os_version = $userAgentData->os->toVersion();
+
+        return $linkStats;
     }
 
 
@@ -54,12 +76,22 @@ class LinkStat extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link_id', 'datetime', 'ip', 'user_agent'], 'required'],
+            [['link_id', 'ip', 'user_agent'], 'required'],
             [['link_id'], 'integer'],
             [['datetime'], 'safe'],
             [['ip'], 'string', 'max' => 11],
-            [['country', 'city', 'user_agent', 'os', 'os_version', 'browser', 'browser_version'], 'string', 'max' => 255],
-            [['link_id'], 'exist', 'skipOnError' => true, 'targetClass' => Link::className(), 'targetAttribute' => ['link_id' => 'id']],
+            [
+                ['country', 'city', 'user_agent', 'os', 'os_version', 'browser', 'browser_version'],
+                'string',
+                'max' => 255,
+            ],
+            [
+                ['link_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Link::className(),
+                'targetAttribute' => ['link_id' => 'id'],
+            ],
         ];
     }
 

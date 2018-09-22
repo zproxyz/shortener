@@ -47,7 +47,7 @@ class m180916_103546_init_app extends Migration
             'counter' => $this->integer()->notNull()->defaultValue(0),
             'expiration' => $this->dateTime(),
             'created' => $this->dateTime()->notNull()->comment('Дата создания'),
-            'created_by' => $this->integer(11)->notNull()->comment('Создавший пользователь'),
+            'created_by' => $this->integer(11)->notNull()->comment('Пользователь'),
         ], $tableOptions);
 
         $this->addForeignKey('fk_link_created_by', '{{%link}}', 'created_by', '{{%user}}', 'id', 'CASCADE', 'CASCADE');

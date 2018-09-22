@@ -8,7 +8,8 @@
 
 namespace shortener\repositories;
 
-use app\models\LinkStat;
+
+use shortener\models\LinkStat;
 
 class LinkStatRepository
 {

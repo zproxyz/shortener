@@ -8,19 +8,19 @@
 
 namespace shortener\repositories;
 
-use app\models\Link;
-use app\models\LinkStat;
+
+use shortener\models\Link;
 
 class LinkRepository
 {
-    public function get($id): Link
+    public function get($id, $isAdmin = false): Link
     {
-        if (!$link = Link::findOne($id)) {
+        $searchFields = $isAdmin ? ['id' => $id] : ['id' => $id, 'created_by' => \Yii::$app->user->id];
+        if (!$link = Link::findOne($searchFields)) {
             throw new NotFoundException('Link is not found.');
         }
         return $link;
     }
-
 
     public function save(Link $link): void
     {
@@ -28,6 +28,8 @@ class LinkRepository
             throw new \RuntimeException('Saving error.');
         }
     }
+
+
 
     /**
      * @param Link $link

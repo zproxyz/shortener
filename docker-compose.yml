@@ -44,6 +44,6 @@ services:
       volumes:
         - .:/application
         - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
-        - ./phpdocker/php-fpm/xdebug.ini:/etc/php5/mods-available/xdebug.ini
+        - ./phpdocker/php-fpm/xdebug.ini:/etc/php/7.2/fpm/conf.d/99-xdebug.ini
 volumes:
   dbshortener:

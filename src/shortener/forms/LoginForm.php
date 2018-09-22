@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace shortener\forms;
 
+use shortener\models\User;
 use Yii;
 use yii\base\Model;
 
