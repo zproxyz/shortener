@@ -104,7 +104,7 @@ class LinkController extends Controller
         if (($link = $this->linkReadRepository->find($id)) === null) {
             throw new NotFoundException('Link is not found.');
         }
-        // Convert expiration date to format 'dd.mm.yyyy' for JS widget
+
         $link->expiration = $link->expiration ? Yii::$app->formatter->asDatetime($link->expiration,'dd.MM.Y H:mm'): null;
         if ($link->load(Yii::$app->request->post()) &&
             $this->shortenerService->updateExpirationTimeUrl($link)) {
@@ -142,13 +142,7 @@ class LinkController extends Controller
     {
         $form = new CreateUrlForm();
 
-        if (!Yii::$app->request->isPost) {
-            return $this->render('create', ['model' => $form]);
-        }
-
-        $form->load(Yii::$app->request->post());
-
-        if (!$form->validate()) {
+        if (!$form->load(Yii::$app->request->post()) || !$form->validate()) {
             return $this->render('create', ['model' => $form]);
         }
 
