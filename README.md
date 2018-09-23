@@ -11,11 +11,11 @@
 ```bash
 $ docker-compose up --build
 $ docker exec -it yii2-shortener-php-fpm bash
-$ cd ./src
-$ composer install
-$ ./yii migrate
-$ ./tests/bin/yii migrate
-$ ./vendor/bin/codecept run
+[docker container]$ cd ./src
+[docker container]$ composer install
+[docker container]$ ./yii migrate
+[docker container]$ ./tests/bin/yii migrate
+[docker container]$ ./vendor/bin/codecept run
 ```
 
 1-ое задание
