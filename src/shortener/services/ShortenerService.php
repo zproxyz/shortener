@@ -41,12 +41,14 @@ class ShortenerService
     /**
      * @param CreateUrlForm $form
      *
+     * @return int
      * @throws \yii\base\Exception
      */
-    public function createShortUrl(CreateUrlForm $form): void
+    public function createShortUrl(CreateUrlForm $form): int
     {
         $link = Link::create($form->url, $this->_generateHash(), $form->expiration);
         $this->links->save($link);
+        return $link->id;
     }
 
     /**
