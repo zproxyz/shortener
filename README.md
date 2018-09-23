@@ -25,7 +25,7 @@ SELECT a.* FROM items AS a
                   LEFT JOIN items AS a2
                     ON a.category_id = a2.category_id AND a.price <= a2.price
 GROUP BY a.id
-HAVING COUNT(*) <= 5
+HAVING COUNT(a.category_id) <= 5
 ORDER BY a.category_id, a.price DESC;
 ```
 2-ое задание
